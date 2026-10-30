@@ -1,0 +1,49 @@
+{
+  "topics": [
+    {
+      "t": "Waterfall model",
+      "on": 1
+    },
+    {
+      "t": "Evolutionary model",
+      "on": 1
+    },
+    {
+      "t": "V-model",
+      "on": 1
+    },
+    {
+      "t": "Spiral model",
+      "on": 1
+    },
+    {
+      "t": "Incremental model",
+      "on": 1
+    }
+  ],
+  "link": "https://kahoot.it/?=304 949",
+  "resp": [
+    {
+      "r": {
+        "Waterfall model": 0,
+        "Evolutionary model": 0,
+        "V-model": 0,
+        "Spiral model": 0,
+        "Incremental model": 0
+      },
+      "help": "",
+      "name": ""
+    }
+  ],
+  "kq": {
+    "Waterfall model": 0,
+    "Evolutionary model": 0,
+    "V-model": 1,
+    "Spiral model": 1,
+    "Incremental model": 1
+  },
+  "reqs": [],
+  "pts": 0,
+  "helped": 0,
+  "shared": 1
+}
