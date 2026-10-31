@@ -42,6 +42,7 @@ function validResponse(b) {
 
 // ---------- API ACTIONS ----------
 function addResponse(b) {
+  
   const r = {};
   Object.keys(b.r).forEach(t => { r[cleanStr(t, 60)] = b.r[t]; });
   const name = b.help === 'teacher' ? cleanStr(b.name, 40) : '';

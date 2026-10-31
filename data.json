@@ -21,54 +21,11 @@
       "on": 1
     }
   ],
-  "link": "https://kahoot.it/?=4823321",
-  "resp": [
-    {
-      "r": {
-        "Waterfall model": 0,
-        "Evolutionary model": 2,
-        "V-model": 2,
-        "Spiral model": 2,
-        "Incremental model": 2
-      },
-      "help": "peers",
-      "name": ""
-    }
-  ],
-  "kq": {
-    "Waterfall model": 1,
-    "Evolutionary model": 0,
-    "V-model": 1,
-    "Spiral model": 0,
-    "Incremental model": 0
-  },
-  "reqs": [
-    {
-      "t": "Incremental model",
-      "h": 1,
-      "o": 1,
-      "c": 1
-    },
-    {
-      "t": "Spiral model",
-      "h": 0,
-      "o": 0,
-      "c": 0
-    },
-    {
-      "t": "V-model",
-      "h": 0,
-      "o": 0,
-      "c": 0
-    },
-    {
-      "t": "Evolutionary model",
-      "h": 0,
-      "o": 0,
-      "c": 0
-    }
-  ],
-  "pts": 10,
-  "helped": 1,
-  "shared": 1
+  "link": "https://kahoot.it",
+  "resp": [],
+  "kq": {},
+  "reqs": [],
+  "pts": 0,
+  "helped": 0,
+  "shared": 0
 }

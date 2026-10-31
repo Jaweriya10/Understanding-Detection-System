@@ -210,6 +210,13 @@ td,th {
   color:#999;
   text-decoration:line-through;
 }
+.tt td{text-align:center;font-size:13px;font-weight:700;padding:10px 4px;border:3px solid #fff;border-radius:10px}
+.tt th{text-align:center;font-size:12px;border:none}
+.tt .B{background:#eceaf3;color:#999}
+.tt .T{background:#dfe9fb;color:#333}
+.tt .C{background:#fdf0cf;color:#333}
+.tt .F{background:var(--g);color:#fff;cursor:pointer}
+.tt .F.pick{outline:3px solid var(--p)}
 </style></head><body>
 <!-- Page shell: title, empty nav and main. JavaScript fills them. -->
 <header><h1>AI-Powered Student Confusion Detection System</h1><div class="mut">Every number on screen comes from real responses entered in this app.</div></header>
@@ -265,6 +272,15 @@ function plan(w){if(w>=CONFIG.PLAN_WHOLE)return{lv:'🚨 Whole class struggled',
  if(w>=CONFIG.PLAN_MANY)return{lv:'⚠ Many students weak',c:'var(--p)',s:['Quick 10-min revision next class','Peer discussion in pairs','Remedial slot for students who chose the teacher']};
  if(w>=CONFIG.PLAN_FEW)return{lv:'🟡 A few students weak',c:'var(--y)',s:['No class time needed','Share practice questions with those who asked','Short doubt session in a free hour']};
  return{lv:'✅ Mostly clear',c:'var(--g)',s:['No action needed','Optional: one enrichment question']}}
+// ===== TIMETABLE: B=both busy, T=only teacher free, C=only class free, F=both free (edit the letters to change the demo) =====
+const TT={periods:[['P1','9:00'],['P2','10:00'],['P3','11:15'],['P4','12:15'],['P5','2:00'],['P6','3:00']],days:{Mon:'BTBFTC',Tue:'TBFBBF',Wed:'TCBTFB',Thu:'CTBTBF',Fri:'BTTBCF'}};
+let booked=null;
+const book=(d,i)=>{booked={d,i};render();toast('Session booked')};
+function ttCard(tl){const L={B:'Busy',T:'Teacher',C:'Class',F:'✓ Free'};const names=[...new Set(tl.map(x=>x.name))];
+ const head='<tr><th></th>'+TT.periods.map(p=>`<th>${p[0]}<br><span class="mut">${p[1]}</span></th>`).join('')+'</tr>';
+ const rows=Object.keys(TT.days).map(d=>'<tr><th>'+d+'</th>'+TT.days[d].split('').map((c,i)=>c=='F'?`<td class="F ${booked&&booked.d==d&&booked.i==i?'pick':''}" onclick="book('${d}',${i})">${L[c]}</td>`:`<td class="${c}">${L[c]}</td>`).join('')+'</tr>').join('');
+ const msg=booked?`<div class="btn g" style="display:block;margin-top:10px">✔ Session booked: ${booked.d} ${TT.periods[booked.i][0]} (${TT.periods[booked.i][1]})${names.length?' · students notified: '+names.map(esc).join(', '):''}</div>`:'<div class="mut" style="margin-top:8px">Tap a green slot to book the remedial session.</div>';
+ return `<div class="card"><b>🗓 Free-hour finder</b><div class="mut">Green = teacher AND class both free. Teacher = only teacher free. Class = only class free.</div><div style="overflow-x:auto"><table class="tt">${head}${rows}</table></div>${msg}</div>`}
 const flag=p=>`<span class="flag" style="background:${p.c};${p.c=='var(--y)'?'color:#222':''}">${p.lv}</span>`;
 // ===== render(): redraws the screen; each tab is one function r1..r7 =====
 function render(){$('#nav').innerHTML=TABS.map((t,i)=>`<button class="${i==tab?'on':''}" onclick="tab=${i};render()">${t}</button>`).join('');$('#v').innerHTML=[r1,r2,r3,r4,r5,r6,r7][tab]()}
@@ -303,7 +319,7 @@ function r5(){const A=act().filter(t=>st(t).T>0);if(!A.length)return '<div class
  const d=A.map(t=>({t,s:st(t)})).sort((x,y)=>y.s.w-x.s.w),tl=S.resp.filter(x=>x.help=='teacher');
  return `<div class="card" style="border-color:var(--p)"><b>🧭 Top priority</b><div>Re-teach <b>${esc(d[0].t)}</b>: ${Math.round(d[0].s.w)}% weak${d[0].s.hq?' (by Kahoot marks)':' (by feedback)'}.</div></div>`+
  d.map(x=>{const p=plan(x.s.w);return `<div class="card" style="border-left:8px solid ${p.c}"><div class="row"><b>${esc(x.t)}</b>${flag(p)}</div><ul style="margin:6px 0;padding-left:20px">${p.s.map(z=>'<li>'+z+'</li>').join('')}</ul></div>`}).join('')+
- `<div class="card"><b>🧑‍🏫 Students who chose the teacher</b>${tl.length?tl.map(x=>`<div style="margin-top:6px"><span class="chip" style="background:var(--p)">${esc(x.name)}</span> ${Object.keys(x.r).filter(t=>x.r[t]>0).map(esc).join(', ')}</div>`).join(''):'<div class="mut">None yet.</div>'}</div>`}
+ `<div class="card"><b>🧑‍🏫 Students who chose the teacher</b>${tl.length?tl.map(x=>`<div style="margin-top:6px"><span class="chip" style="background:var(--p)">${esc(x.name)}</span> ${Object.keys(x.r).filter(t=>x.r[t]>0).map(esc).join(', ')}</div>`).join(''):'<div class="mut">None yet.</div>'}</div>`+ttCard(tl)}
 // ===== TAB 6: Kahoot vs feedback (honesty check) =====
 function r6(){const A=act();
  let h=`<div class="card"><b>📥 Enter Kahoot results</b><div class="mut">From the Kahoot report, enter the % of players who answered each topic’s questions correctly.</div>${A.map(t=>`<div class="row" style="margin-top:8px"><span>${esc(t)}</span><input type="number" min="0" max="100" style="width:100px" placeholder="% correct" value="${S.kq[t]??''}" onchange="S.kq['${t.replace(/'/g,"\\'")}']=this.value===''?'':Math.min(100,Math.max(0,+this.value));pushConfig()"></div>`).join('')}</div>`;
